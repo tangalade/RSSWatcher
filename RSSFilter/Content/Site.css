@@ -1,0 +1,117 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* define a class to collapse width to content */
+th.nostretch,
+td.nostretch {
+    width: 1%;
+    white-space: nowrap;
+}
+
+/* form-control class defined in bootsrap-lumen.css, override the above max-width constraint */
+.form-control {
+    max-width: none;
+}
+
+.table > thead > tr > th.form-cell,
+.table > tbody > tr > th.form-cell,
+.table > tfoot > tr > th.form-cell,
+.table > thead > tr > td.form-cell,
+.table > tbody > tr > td.form-cell,
+.table > tfoot > tr > td.form-cell {
+    padding: 2px;
+}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    vertical-align: middle;
+}
+
+.table > thead > tr > th > button,
+.table > tbody > tr > th > button,
+.table > tfoot > tr > th > button,
+.table > thead > tr > td > button,
+.table > tbody > tr > td > button,
+.table > tfoot > tr > td > button {
+    width: 100%;
+}
+
+.table-hover > tbody > tr:hover {
+  background-color: #e0e0e0;
+}
+
+.field-validation-error {
+    color: red;
+}
+
+.input-validation-error {
+    border: 2px solid red;
+}
+
+.table > thead > tr > th.table-cell-hidden,
+.table > tbody > tr > th.table-cell-hidden,
+.table > tfoot > tr > th.table-cell-hidden,
+.table > thead > tr > td.table-cell-hidden,
+.table > tbody > tr > td.table-cell-hidden,
+.table > tfoot > tr > td.table-cell-hidden {
+    padding-top: 0px;
+    border: 0px;
+}
+
+.table > thead > tr > th.table-cell-pair-left,
+.table > thead > tr > td.table-cell-pair-left {
+    padding-right: 3px;
+    border-right: 0px;
+}
+
+.table > thead > tr > th.table-cell-pair-right,
+.table > thead > tr > td.table-cell-pair-right {
+    padding-left: 3px;
+    border-left: 0px;
+}
+
+td > .form-control {
+    border: 0px;
+}
+
+.table > thead {
+    background-color: #dddddd;
+}
+
+th a {
+    display: block;
+    width: 100%;
+}
+
+table > tbody > tr > td.url-hover a:hover {
+    text-decoration: underline;
+}
+
+li.dropdown:hover ul.dropdown-menu {
+  display: block;
+}

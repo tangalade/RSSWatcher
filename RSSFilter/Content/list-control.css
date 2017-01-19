@@ -1,0 +1,88 @@
+﻿.main-title {
+    float: left;
+    position: relative;
+}
+.main-title h2 {
+    margin-bottom: 3px;
+}
+
+.list-control-header {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    margin-bottom: 2px;
+}
+
+.filter-items {
+    padding: 4px 5px 5px 10px;
+    font-weight: bold;
+    float: left;
+    position: relative;
+}
+.filter-items a {
+    color: #ff8888;
+    cursor: pointer;
+    margin-right: 7px;
+    /*the right edge of the rightmost filter item is cut off for some reason*/
+    background-color: #dddddd;
+    padding: 3px;
+    border-radius: 8px;
+    overflow: visible;
+}
+.filter-items,
+.filter-items a:hover {
+    color: #d00000;
+}
+.filter-items a:hover {
+    text-decoration: none;
+}
+
+.filter-items i {
+    font-size: 14px;
+    text-decoration: none;
+    color: #888888;
+    padding-left: 3px;
+    vertical-align: middle;
+    /* must be inline for the rounded background not to be cut off on right side
+        unfortunately it makes the delete symbol slightly too low
+    */
+    display: inline;
+}
+.filter-items a:hover i {
+    color: black;
+}
+.filter-items a span {
+    vertical-align: top;
+}
+
+.page-size-items {
+    float: right;
+    padding: 4px 10px 5px 5px;
+ }
+.page-size-item {
+    padding-left: 1px;
+}
+.page-size-items a:hover {
+    cursor: pointer;
+}
+.page-control {
+    width: 100%;
+    text-align: center;
+}
+.page-control a:hover {
+    cursor: pointer;
+}
+.page-control .page-control-button {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.page-control span.page-select-button {
+    font-weight: bold;
+}
+.page-control .page-select-button,
+.page-control .page-select-ellipsis {
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 16px;
+}

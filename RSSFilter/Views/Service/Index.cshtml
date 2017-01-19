@@ -1,0 +1,140 @@
+﻿@model RSSFilter.ViewModel.RSSServiceFormViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>RSS Background Services</h2>
+
+@{ int idx; }
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="table-cell-pair-left">
+                <a href="@Url.Action("Index", "Service", new { sortOrder = ViewBag.NameSortParm })">
+                    @Html.DisplayNameFor(m => m.RSSServiceInfo.Name)
+                </a>
+            </th>
+            <th class="nostretch table-cell-pair-right">
+                <a href="@Url.Action("Index", "Service", new { sortOrder = ViewBag.NameSortParm })">
+                    <div class="arrow-up-down">
+                        <div class="arrow">&#x25b2</div>
+                        <div class="arrow arrow-hidden">&#x25bc</div>
+                    </div>
+                </a>
+            </th>
+            <th class="table-cell-pair-left">
+                <a href="@Url.Action("Index", "Service", new { sortOrder = ViewBag.URLSortParm })">
+                    @Html.DisplayNameFor(m => m.RSSServiceInfo.RSSURL)
+                </a>
+            </th>
+            <th class="nostretch table-cell-pair-right">
+                <a href="@Url.Action("Index", "Service", new { sortOrder = ViewBag.URLSortParm })">
+                    <div class="arrow-up-down">
+                        <div class="arrow">&#x25b2</div>
+                        <div class="arrow arrow-hidden">&#x25bc</div>
+                    </div>
+                </a>
+            </th>
+            <th class="nostretch table-cell-pair-left">
+                <a href="@Url.Action("Index", "Service", new { sortOrder = ViewBag.LastStartDateSortParm })">
+                    @Html.DisplayNameFor(m => m.RSSServiceInfo.LastStartDate)
+                </a>
+            </th>
+            <th class="nostretch table-cell-pair-right">
+                <a href="@Url.Action("Index", "Service", new { sortOrder = ViewBag.LastStartDateSortParm })">
+                    <div class="arrow-up-down">
+                        <div class="arrow">&#x25b2</div>
+                        <div class="arrow arrow-hidden">&#x25bc</div>
+                    </div>
+                </a>
+            </th>
+            <th class="nostretch table-cell-pair-left">
+                <a href="@Url.Action("Index", "Service", new { sortOrder = ViewBag.StatusSortParm })">
+                    @Html.DisplayNameFor(m => m.RSSServiceInfo.IsRunning)
+                </a>
+            </th>
+            <th class="nostretch table-cell-pair-right">
+                <a href="@Url.Action("Index", "Service", new { sortOrder = ViewBag.StatusSortParm })">
+                    <div class="arrow-up-down">
+                        <div class="arrow">&#x25b2</div>
+                        <div class="arrow arrow-hidden">&#x25bc</div>
+                    </div>
+                </a>
+            </th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ idx = 0; }
+        @foreach (var rssServiceInfo in Model.RSSServiceInfoes)
+            {
+            <tr>
+                <td colspan="2">
+                    @Html.DisplayFor(m => rssServiceInfo.Name)
+                    <input data-val="true" data-val-length="The field Name must be a string with a maximum length of 255." data-val-length-max="255" data-val-required="The Name field is required." form="update_service@(idx)" id="rssServiceInfo_Name" name="rssServiceInfo.Name" type="hidden" value="@rssServiceInfo.Name">
+                </td>
+                <td colspan="2">
+                    @Html.DisplayFor(m => rssServiceInfo.RSSURL)
+                    <input data-val="true" data-val-required="The RSSURL field is required." form="update_service@(idx)" id="rssServiceInfo_RSSURL" name="rssServiceInfo.RSSURL" type="hidden" value="@rssServiceInfo.RSSURL">
+                </td>
+                <td class="table-cell-center" colspan="2">
+                    @if (rssServiceInfo.IsRunning == true)
+                    {
+                        @Html.DisplayFor(x => rssServiceInfo.LastStartDate)
+                    }
+                </td>
+                <td class="nostretch" colspan="2">
+                    @if (rssServiceInfo.IsRunning == true)
+                    {
+                        <button type="submit" class="btn btn-success" name="command" value="Stop" form="update_service@(idx)">Active</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-danger" name="command" value="Start" form="update_service@(idx)">Inactive</button>
+                    }
+                </td>
+                <td class="nostretch">
+                    <button type="submit" class="btn btn-danger" name="command" value="Delete" form="update_service@(idx)">&#10006</button>
+                </td>
+            </tr>
+            idx++;
+        }
+
+        <tr>
+            <td class="form-cell" colspan="2">
+                @Html.TextBoxFor(m => m.RSSServiceInfo.Name, new { @class = "form-control", placeholder = "Name", form = "new_service" })
+            </td>
+            <td class="form-cell" colspan="2">
+                @Html.TextBoxFor(m => m.RSSServiceInfo.RSSURL, new { @class = "form-control", placeholder = "RSS Feed URL", form = "new_service" })
+            </td>
+            <td class="nostretch" colspan="2"></td>
+            <td class="nostretch" colspan="2">
+                <button type="submit" class="btn btn-primary" name="command" value="Create" form="new_service">New</button>
+            </td>
+            <td class="nostretch"></td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td class="table-cell-hidden">
+                @Html.ValidationMessageFor(m => m.RSSServiceInfo.Name)
+            </td>
+            <td class="table-cell-hidden" ">
+                @Html.ValidationMessageFor(m => m.RSSServiceInfo.RSSURL)
+            </td>
+            <td class="table-cell-hidden" "></td>
+            <td class="table-cell-hidden" "></td>
+            <td class="table-cell-hidden" "></td>
+        </tr>
+    </tfoot>
+
+</table>
+@using (Html.BeginForm("Submit", "Service", FormMethod.Post, new { enctype = "multipart/form-data", id = "new_service" })) { }
+@{ idx = 0; }
+@foreach (var rssServiceInfo in Model.RSSServiceInfoes)
+{
+    using (Html.BeginForm("Submit", "Service", FormMethod.Post, new { enctype = "multipart/form-data", id = "update_service" + idx })) { }
+    idx++;
+}

@@ -1,0 +1,109 @@
+﻿.rss-item-table {
+    table-layout: fixed;
+}
+.rss-item-table tr.header-row {
+    cursor: pointer
+}
+
+.rss-item-row [data-col="RSSPublishDate"] {
+    text-align: left;
+}
+.rss-item-row [data-col="Edit"] {
+    text-align: center;
+}
+
+.rss-item-row td {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /*for text on left and thumbs on right to overlap*/
+    position: relative;
+}
+
+.rss-item-table [data-col="Select"] {
+    width: 29px;
+    text-align: center;
+}
+.rss-item-table [data-col="RSSPublishDate"] {
+    width: 115px;
+}
+.rss-item-table [data-col="ItemType"] {
+    width: 13%;
+}
+.rss-item-table [data-col="Artist"] {
+    width: 27%;
+}
+.rss-item-table [data-col="Title"] {
+    width: 60%;
+}
+.rss-item-table [data-col="Edit"],
+.rss-item-table [data-col="Archive"] {
+    width: 37px;
+}
+
+.rss-item-table i {
+    font-size: 20px;
+}
+.rss-item-table i:hover {
+    color: black;
+}
+
+.rss-item-row td a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.rss-item-row td a:hover {
+    text-decoration: underline;
+}
+
+.rss-item-row .thumbs {
+    position: absolute;
+    right: 0;
+    padding-right: 10px;
+    margin-top: -1px;
+}
+.rss-item-row .thumb {
+    font-size: 15px;
+    opacity: 0;
+    color: #aaaaaa;
+    vertical-align: middle;
+    padding-left: 1px;
+    padding-right: 1px;
+}
+.rss-item-row td:hover .thumb {
+    opacity: 1;
+}
+.thumb:hover {
+    cursor: pointer;
+}
+.thumb[data-type="up"][data-active="true"],
+.thumb[data-type="up"]:hover {
+    color: #16ac16;
+}
+.thumb[data-type="up"]:hover {
+    text-shadow: 1px 1px 3px #50c650;
+}
+.thumb[data-type="down"][data-active="True"],
+.thumb[data-type="down"]:hover {
+    color: red;
+}
+.thumb[data-type="down"]:hover {
+    text-shadow: 1px 1px 3px #fb6b6b;
+}
+
+
+.list-control-header .action-buttons {
+    float: left;
+}
+
+.action-buttons button {
+    margin-left: 5px;
+    vertical-align: middle;
+    border: 1px solid #cccccc;
+    padding: 1px 15px;
+    border-radius: 3px;
+}
+.action-buttons button i {
+    vertical-align: middle;
+}
+
