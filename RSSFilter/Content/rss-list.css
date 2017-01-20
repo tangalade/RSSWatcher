@@ -1,8 +1,24 @@
-﻿.rss-item-table {
+﻿.content-wrapper {
+    margin: 0 auto;
+}
+.content-wrapper[data-type="rss-items"] {
+    width: 100%;
+}
+.content-wrapper[data-type="artists"],
+.content-wrapper[data-type="item-types"] {
+    width: 600px;
+}
+.rss-item-table {
     table-layout: fixed;
 }
-.rss-item-table tr.header-row {
-    cursor: pointer
+
+.rss-item-row[data-viewstatus="New"] {
+    font-weight: bold;
+    background-color: white;
+}
+.rss-item-row[data-viewstatus="Viewed"] {
+    font-weight: normal;
+    background-color: #dddddd;
 }
 
 .rss-item-row [data-col="RSSPublishDate"] {
@@ -19,7 +35,7 @@
     position: relative;
 }
 
-.rss-item-table [data-col="Select"] {
+ .rss-item-table [data-col="Select"] {
     width: 29px;
     text-align: center;
 }
@@ -38,6 +54,17 @@
 .rss-item-table [data-col="Edit"],
 .rss-item-table [data-col="Archive"] {
     width: 37px;
+}
+
+
+[data-type="artists"] .rss-item-table [data-col="Name"],
+[data-type="item-types"] .rss-item-table [data-col="Name"] {
+    width: 542px;
+}
+[data-type="artists"] .rss-item-table [data-col="Rating"],
+[data-type="item-types"] .rss-item-table [data-col="Rating"] {
+    width: 58px;
+    text-align: center;
 }
 
 .rss-item-table i {
@@ -64,11 +91,13 @@
 }
 .rss-item-row .thumb {
     font-size: 15px;
-    opacity: 0;
     color: #aaaaaa;
     vertical-align: middle;
     padding-left: 1px;
     padding-right: 1px;
+}
+.rss-item-row .thumbs .thumb {
+    opacity: 0;
 }
 .rss-item-row td:hover .thumb {
     opacity: 1;
@@ -76,7 +105,7 @@
 .thumb:hover {
     cursor: pointer;
 }
-.thumb[data-type="up"][data-active="true"],
+.thumb[data-type="up"][data-active="True"],
 .thumb[data-type="up"]:hover {
     color: #16ac16;
 }

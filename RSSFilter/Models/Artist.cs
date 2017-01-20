@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RSSFilter.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,10 +11,12 @@ namespace RSSFilter.Models
     {
         public static Artist UNKNOWN = new Artist() { Name = "Unkown" };
         public int Id { get; set; }
+        [Sortable(true)]
         [Required]
         [StringLength(255)]
         [Display(Name = "Artist")]
         public string Name { get; set; }
+        [Sortable]
         public Rating Rating { get; set; } = Rating.UNRATED;
     }
 }

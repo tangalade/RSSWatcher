@@ -26,124 +26,241 @@ namespace RSSFilter.Controllers
             _context.Dispose();
         }
 
-        public ActionResult Edit(int itemId)
+        public ActionResult Edit(int id)
         {
             var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
-            var rssItem = rssItems.Where(r => r.Id == itemId).SingleOrDefault();
+            var rssItem = rssItems.Where(r => r.Id == id).SingleOrDefault();
             return View();
         }
-
-        public ActionResult MarkNew(ListControl<RSSItem> control, int[] itemIds)
+        public ActionResult PageSize(int pageSize)
         {
-            var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
-
-            for (int i=0; i<itemIds.Length; i++)
-            {
-                var rssItem = rssItems.Where(r => r.Id == itemIds[i]).SingleOrDefault();
-                rssItem.viewStatus = ItemViewStatus.NEW;
-            }
-            _context.SaveChanges();
-
-            return RedirectToAction("Index", "RSS", new { control = control });
+            ListControl<RSSItem> control = new ListControl<RSSItem>(Request.Cookies);
+            control.pager.PageSize = pageSize;
+            control.pager.reset();
+            control.fillCookies(Response.Cookies);
+            return Redirect(Request.UrlReferrer.ToString());
         }
-
-        public ActionResult MarkViewed(ListControl<RSSItem> control, int[] itemIds)
+        public ActionResult GoToPage(int pageNum)
         {
-            var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
-
-            for (int i = 0; i < itemIds.Length; i++)
-            {
-                var rssItem = rssItems.Where(r => r.Id == itemIds[i]).SingleOrDefault();
-                rssItem.viewStatus = ItemViewStatus.VIEWED;
-            }
-            _context.SaveChanges();
-
-            return RedirectToAction("Index", "RSS", new { control = control });
+            ListControl<RSSItem> control = new ListControl<RSSItem>(Request.Cookies);
+            if (pageNum < 1)
+                pageNum = 1;
+            control.pager.PageNum = pageNum;
+            control.fillCookies(Response.Cookies);
+            return Redirect(Request.UrlReferrer.ToString());
         }
-
-        public ActionResult Archive(ListControl<RSSItem> control, int[] itemIds)
+        public ActionResult SortBy(string prop, bool ascending)
         {
-            var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
-
-            for (int i = 0; i < itemIds.Length; i++)
+            ListControl<RSSItem> control = new ListControl<RSSItem>(Request.Cookies);
+            if (control.sortableFields.ContainsKey(prop))
             {
-                var rssItem = rssItems.Where(r => r.Id == itemIds[i]).SingleOrDefault();
-                rssItem.viewStatus = ItemViewStatus.ARCHIVED;
+                control.sorter.Name = prop;
+                control.sorter.Ascending = ascending;
             }
-            _context.SaveChanges();
-
-            return RedirectToAction("Index", "RSS", new { control = control });
+            control.fillCookies(Response.Cookies);
+            return Redirect(Request.UrlReferrer.ToString());
         }
-
-
-        public ActionResult ReadItem(ListControl<RSSItem> control, int itemId)
+        public ActionResult FilterBy(string prop, string value)
         {
-            var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
-            var rssItem = rssItems.Where(r => r.Id == itemId).SingleOrDefault();
-
-            if (rssItem != null)
+            ListControl<RSSItem> control = new ListControl<RSSItem>(Request.Cookies);
+            if (control.filterableFields.ContainsKey(prop))
             {
-                rssItem.viewStatus = ItemViewStatus.VIEWED;
-                _context.SaveChanges();
-                return Redirect(rssItem.RSSURI);
+                var filter = control.filterableFields[prop];
+                filter.Value = value;
+                control.filters.Add(filter);
             }
-
-            return RedirectToAction("Index", "RSS", new { control = control });
+            control.fillCookies(Response.Cookies);
+            return Redirect(Request.UrlReferrer.ToString());
         }
-
-        public ActionResult RateArtist(ListControl<RSSItem> control, int artistId, Rating rating)
+        public ActionResult RemoveFilter(string prop)
         {
-            var artist = _context.Artists.Where(a => a.Id == artistId).SingleOrDefault();
+            ListControl<RSSItem> control = new ListControl<RSSItem>(Request.Cookies);
+            control.filters = control.filters.Where(f => f.Name != prop).ToList();
+            control.fillCookies(Response.Cookies);
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+        public ActionResult RateArtist(int id, Rating rating)
+        {
+            var artist = _context.Artists.Where(a => a.Id == id).SingleOrDefault();
             if (artist != null)
             {
                 artist.Rating = rating;
                 _context.SaveChanges();
             }
-
-            return RedirectToAction("Index", "RSS", new { control = control });
+            return Redirect(Request.UrlReferrer.ToString());
         }
-
-        public ActionResult RateItemType(ListControl<RSSItem> control, int itemId, Rating rating)
+        public ActionResult RateItemType(int id, Rating rating)
         {
-            var itemType = _context.ItemTypes.Where(a => a.Id == itemId).SingleOrDefault();
+            var itemType = _context.ItemTypes.Where(i => i.Id == id).SingleOrDefault();
             if (itemType != null)
             {
                 itemType.Rating = rating;
                 _context.SaveChanges();
             }
-
-            return RedirectToAction("Index", "RSS", new { control = control });
+            return Redirect(Request.UrlReferrer.ToString());
         }
-
-        public async Task<ActionResult> Index(ListControl<RSSItem> control)
+        public ActionResult ViewItem(int id)
         {
-            // FIXME: could get bad once the db increases in size
-            // get all rssItems
+            var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
+            var rssItem = rssItems.Where(r => r.Id == id).SingleOrDefault();
+            if (rssItem != null)
+            {
+                rssItem.ViewStatus = ItemViewStatus.VIEWED;
+                _context.SaveChanges();
+                return Redirect(rssItem.RSSURI);
+            }
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+        public ActionResult Archive(int id)
+        {
+            var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
+            var rssItem = rssItems.Where(r => r.Id == id).SingleOrDefault();
+            rssItem.ViewStatus = ItemViewStatus.ARCHIVED;
+            _context.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+        public ActionResult MarkViewStatus(int[] ids, ItemViewStatus viewStatus)
+        {
+            var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+                var rssItem = rssItems.Where(r => r.Id == id).SingleOrDefault();
+                if (rssItem != null)
+                    rssItem.ViewStatus = viewStatus;
+            }
+            _context.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+        public async Task<ActionResult> Index(bool all = false)
+        {
+            // FIXME: what if came from Artist/ItemTypes?
+            // need to have the cookies cleared out somehow, or ignored, or replaced
+            ListControl<RSSItem> control = new ListControl<RSSItem>(Request.Cookies);
             var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
 
-            // create blank controls if needed
-            if (control == null)
-                control = new ListControl<RSSItem>();
+            // exclude Archived items
+            if (!all)
+                rssItems = rssItems.Where(r => r.ViewStatus != ItemViewStatus.ARCHIVED);
 
+            control.fillCookies(Response.Cookies);
             return View(await ListViewModel<RSSItem>.CreateAsync(rssItems, control));
         }
-        //public async Task<ActionResult> Index(RSSListControl control)
+        public async Task<ActionResult> Artists()
+        {
+            ListControl<Artist> control = new ListControl<Artist>(Request.Cookies);
+            var artists = _context.Artists;
+
+            control.fillCookies(Response.Cookies);
+            return View(await ListViewModel<Artist>.CreateAsync(artists, control));
+        }
+        public async Task<ActionResult> ItemTypes()
+        {
+            ListControl<ItemType> control = new ListControl<ItemType>(Request.Cookies);
+            var itemTypes = _context.ItemTypes;
+
+            control.fillCookies(Response.Cookies);
+            return View(await ListViewModel<ItemType>.CreateAsync(itemTypes, control));
+        }
+
+        //public ActionResult MarkNew(ListControl<RSSItem> control, int[] ids)
         //{
-        //    // FIXME: could get bad once the db increases in size
-        //    // get all rssItems
         //    var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
+
+        //    for (int i=0; i<ids.Length; i++)
+        //    {
+        //        var id = ids[i];
+        //        var rssItem = rssItems.Where(r => r.Id == id).SingleOrDefault();
+        //        rssItem.ViewStatus = ItemViewStatus.NEW;
+        //    }
+        //    _context.SaveChanges();
+
+        //    return RedirectToAction("Index", "RSS", new { control = control });
+        //}
+
+        //public ActionResult MarkViewed(ListControl<RSSItem> control, int[] ids)
+        //{
+        //    var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
+
+        //    for (int i = 0; i < ids.Length; i++)
+        //    {
+        //        var id = ids[i];
+        //        var rssItem = rssItems.Where(r => r.Id == id).SingleOrDefault();
+        //        rssItem.ViewStatus = ItemViewStatus.VIEWED;
+        //    }
+        //    _context.SaveChanges();
+
+        //    return RedirectToAction("Index", "RSS", new { control = control });
+        //}
+
+        //public ActionResult Archive(ListControl<RSSItem> control, int[] ids)
+        //{
+        //    var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
+
+        //    for (int i = 0; i < ids.Length; i++)
+        //    {
+        //        var id = ids[i];
+        //        var rssItem = rssItems.Where(r => r.Id == id).SingleOrDefault();
+        //        rssItem.ViewStatus = ItemViewStatus.ARCHIVED;
+        //    }
+        //    _context.SaveChanges();
+
+        //    return RedirectToAction("Index", "RSS", new { control = control });
+        //}
+
+
+        //public ActionResult ViewItem(ListControl<RSSItem> control, int id)
+        //{
+        //    var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
+        //    var rssItem = rssItems.Where(r => r.Id == id).SingleOrDefault();
+
+        //    if (rssItem != null)
+        //    {
+        //        rssItem.ViewStatus = ItemViewStatus.VIEWED;
+        //        _context.SaveChanges();
+        //        return Redirect(rssItem.RSSURI);
+        //    }
+
+        //    return RedirectToAction("Index", "RSS", new { control = control });
+        //}
+
+        //public ActionResult RateArtist(ListControl<RSSItem> control, int id, Rating rating)
+        //{
+        //    var artist = _context.Artists.Where(a => a.Id == id).SingleOrDefault();
+        //    if (artist != null)
+        //    {
+        //        artist.Rating = rating;
+        //        _context.SaveChanges();
+        //    }
+
+        //    return RedirectToAction("Index", "RSS", new { control = control });
+        //}
+
+        //public ActionResult RateItemType(ListControl<RSSItem> control, int id, Rating rating)
+        //{
+        //    var itemType = _context.ItemTypes.Where(a => a.Id == id).SingleOrDefault();
+        //    if (itemType != null)
+        //    {
+        //        itemType.Rating = rating;
+        //        _context.SaveChanges();
+        //    }
+
+        //    return RedirectToAction("Index", "RSS", new { control = control });
+        //}
+
+        // old version using JS to submit forms
+        //public async Task<ActionResult> Index(ListControl<RSSItem> control)
+        //{
+        //    var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
+
+        //    // exclude Archived items
+        //    rssItems = rssItems.Where(r => r.ViewStatus != ItemViewStatus.ARCHIVED);
 
         //    // create blank controls if needed
         //    if (control == null)
-        //        control = new RSSListControl();
+        //        control = new ListControl<RSSItem>();
 
-        //    ListControl<RSSItem> listControl = new ListControl<RSSItem>();
-        //    listControl.filters[0] = listControl.filterableFields["Artist"];
-        //    listControl.filters[0].Value = "Cosmic Girls";
-        //    listControl.sorter = listControl.sortableFields["Artist"];
-        //    ListViewModel<RSSItem> listViewModel = await ListViewModel<RSSItem>.CreateAsync(rssItems, listControl);
-
-        //    return View(await RSSListViewModel.CreateAsync(rssItems, control));
+        //    return View(await ListViewModel<RSSItem>.CreateAsync(rssItems, control));
         //}
     }
 }

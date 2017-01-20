@@ -1,0 +1,11 @@
+﻿@model IEnumerable<RSSFilter.Common.ListFilter>
+
+<div class="filter-items">
+    @foreach (var filter in Model)
+    {
+        if (filter.Name != null)
+        {
+            <a href="@Url.Action("RemoveFilter", "RSS", new { prop = filter.Name })"><span>@(filter.Value)</span><span><i class="material-icons">close</i></span></a>
+        }
+    }
+</div>

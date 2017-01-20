@@ -1,0 +1,76 @@
+﻿@model RSSFilter.Common.ListViewModel<RSSFilter.Models.Artist>
+@{
+    ViewBag.Title = "Artists";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using RSSFilter.Common
+@using RSSFilter.Models
+
+<div class="content-wrapper" data-type="artists">
+    <div class="main-title">
+        <h2>Artists</h2>
+    </div>
+    <div class="list-control-header">
+        @Html.Partial("_PageSize", Model.control.pager)
+    </div>
+
+    @{ string colName; }
+    <table class="table table-bordered table-hover rss-item-table">
+        <thead>
+            <tr class="header-row">
+                @{ colName = "Name"; }
+                <th data-col="@colName">
+                    <a href="@Url.Action("SortBy", "RSS",
+                        new { prop = colName, ascending = (Model.control.sorter.Name.Equals(colName) ?
+                        (Model.control.sorter.Ascending ? false : true) : true) })">
+                        <span class="text">@Html.DisplayNameFor(m => m.items.ElementAt(0).Name)</span>
+                        <span class="sort-icon">
+                            @Html.Raw(Model.control.sorter.Name.Equals(colName) ? (Model.control.sorter.Ascending ? "&#x25b4" : "&#x25be") : "")
+                        </span>
+                    </a>
+                </th>
+                @{ colName = "Rating"; }
+                <th data-col="@colName">
+                    <a href="@Url.Action("SortBy", "RSS",
+                        new { prop = colName, ascending = (Model.control.sorter.Name.Equals(colName) ?
+                        (Model.control.sorter.Ascending ? false : true) : true) })">
+                        <span class="text">@Html.DisplayNameFor(m => m.items.ElementAt(0).Rating)</span>
+                        <span class="sort-icon">
+                            @Html.Raw(Model.control.sorter.Name.Equals(colName) ? (Model.control.sorter.Ascending ? "&#x25b4" : "&#x25be") : "")
+                        </span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.items.Count() == 0)
+            {
+                <tr><td colspan="5">No artists have been discovered.</td></tr>
+            }
+            @foreach (var item in Model.items)
+            {
+                <tr class="rss-item-row" data-rating="@item.Rating">
+                    @{ colName = "Name"; }
+                    <td class="url-hover" data-col="@colName">
+                        <span class="content">
+                            @Html.DisplayFor(m => item.Name)
+                        </span>
+                    </td>
+                    @{ colName = "Rating"; }
+                    <td class="url-hover" data-col="@colName">
+                        <span class="content">
+                            <a href="@Url.Action("RateArtist", "RSS", new { id = item.Id, rating = ((item.Rating == Rating.LIKE) ? Rating.UNRATED : Rating.LIKE)})">
+                                <i data-active="@(item.Rating == Rating.LIKE)" data-type="up" class="material-icons thumb">thumb_up</i>
+                            </a>
+                            <a href="@Url.Action("RateArtist", "RSS", new { id = item.Id, rating = ((item.Rating == Rating.DISLIKE) ? Rating.UNRATED: Rating.DISLIKE)})">
+                                <i data-active="@(item.Rating == Rating.DISLIKE)" data-type="down" class="material-icons thumb">thumb_down</i>
+                            </a>
+                        </span>
+                    </td>
+                </tr>
+                        }
+        </tbody>
+    </table>
+
+    @Html.Partial("_PageControls", Model.control.pager)
+</div>

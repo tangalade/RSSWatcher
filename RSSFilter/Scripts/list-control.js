@@ -65,15 +65,15 @@ function filterBy(col, value) {
 }
 
 function genAndSubmitControlForm() {
-    var form = genControlForm();
+    var form = genControlForm(controlSubmitURL);
     document.body.appendChild(form);
     form.submit();
 }
 
-function genControlForm() {
+function genControlForm(submitURL) {
     var form = document.createElement("form");
     form.setAttribute("method", "post");
-    form.setAttribute("action", controlSubmitURL);
+    form.setAttribute("action", submitURL);
     addHiddenControlFields(form);
     return form;
 }
@@ -87,7 +87,7 @@ function addHiddenControlFields(form) {
             console.log(filterControlPath + "[" + idx + "].Name" + ": " + key)
             var hiddenValueField = genHiddenField(filterControlPath + "[" + idx + "].Value", filterControls[key]);
             form.appendChild(hiddenValueField);
-            console.log(filterControlPath + "[" + idx + "].Value" + ": " + filterControls[key])
+            //console.log(filterControlPath + "[" + idx + "].Value" + ": " + filterControls[key])
             idx++;
         }
     }
@@ -95,14 +95,14 @@ function addHiddenControlFields(form) {
         if (sortControls.hasOwnProperty(key)) {
             var hiddenField = genHiddenField(sortControlPath + "." + key, sortControls[key]);
             form.appendChild(hiddenField);
-            console.log(sortControlPath + "." + key + ": " + sortControls[key])
+            //console.log(sortControlPath + "." + key + ": " + sortControls[key])
         }
     }
     for (var key in pageControls) {
         if (pageControls.hasOwnProperty(key)) {
             var hiddenField = genHiddenField(pageControlPath + "." + key, pageControls[key]);
             form.appendChild(hiddenField);
-            console.log(pageControlPath + "." + key + ": " + pageControls[key])
+            //console.log(pageControlPath + "." + key + ": " + pageControls[key])
         }
     }
 }

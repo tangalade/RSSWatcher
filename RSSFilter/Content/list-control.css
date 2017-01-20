@@ -1,5 +1,4 @@
 ﻿.main-title {
-    float: left;
     position: relative;
 }
 .main-title h2 {
@@ -12,6 +11,16 @@
     position: relative;
     vertical-align: middle;
     margin-bottom: 2px;
+}
+
+.header-row a:hover {
+    text-decoration: none;
+}
+.header-row a:hover span.text {
+    text-decoration: underline;
+}
+.header-row a:hover span.sort-icon {
+    text-decoration: none;
 }
 
 .filter-items {
@@ -66,6 +75,11 @@
 .page-size-items a:hover {
     cursor: pointer;
 }
+.page-size-items .count {
+    font-weight: bold;
+    padding-right: 10px;
+}
+
 .page-control {
     width: 100%;
     text-align: center;

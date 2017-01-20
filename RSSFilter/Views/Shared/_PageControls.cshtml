@@ -1,0 +1,88 @@
+﻿@model RSSFilter.Common.Paging
+
+<div class="page-control">
+    <span class="page-control-button">
+        @if (Model.PageNum == 1)
+        {
+            @:Previous
+        }
+        else
+        {
+            @Html.ActionLink("Previous", "GoToPage", new { pageNum = (Model.PageNum - 1) })
+        }
+    </span>
+    @if (Model.NumPages > 5)
+    {
+        if (Model.PageNum > 4)
+        {
+            <span class="page-select-button">
+                @Html.ActionLink("1", "GoToPage", new { pageNum = 1 })
+            </span>
+            <span class="page-select-ellipsis">&#x25e6 &#x25e6 &#x25e6</span>
+            <span class="page-select-button">
+                @Html.ActionLink((Model.PageNum - 1).ToString(), "GoToPage", new { pageNum = (Model.PageNum - 1) })
+            </span>
+        }
+        else
+        {
+            for (int i = 1; i <= Model.PageNum - 1; i++)
+            {
+                <span class="page-select-button">
+                    @Html.ActionLink(i.ToString(), "GoToPage", new { pageNum = i })
+                </span>
+            }
+        }
+        <span class="page-select-button">
+            @(Model.PageNum)
+        </span>
+        if ((Model.NumPages - Model.PageNum) > 4)
+        {
+            <span class="page-select-button">
+                @Html.ActionLink((Model.PageNum + 1).ToString(), "GoToPage", new { pageNum = (Model.PageNum + 1) })
+            </span>
+            <span class="page-select-ellipsis">&#x25e6 &#x25e6 &#x25e6</span>
+            <span class="page-select-button">
+                @Html.ActionLink(Model.NumPages.ToString(), "GoToPage", new { pageNum = Model.NumPages })
+            </span>
+        }
+        else
+        {
+            for (int i = Model.PageNum + 1; i <= Model.NumPages; i++)
+            {
+                <span class="page-select-button">
+                    @Html.ActionLink(i.ToString(), "GoToPage", new { pageNum = i })
+                </span>
+            }
+        }
+    }
+    else
+    {
+        for (int i = 1; i <= Model.PageNum - 1; i++)
+        {
+            <span class="page-select-button">
+                @Html.ActionLink(i.ToString(), "GoToPage", new { pageNum = i })
+            </span>
+        }
+        <span class="page-select-button">
+            @(Model.PageNum)
+        </span>
+        for (int i = Model.PageNum + 1; i <= Model.NumPages; i++)
+        {
+            <span class="page-select-button">
+                @Html.ActionLink(i.ToString(), "GoToPage", new { pageNum = i })
+            </span>
+        }
+    }
+    <span class="page-control-button">
+        @if (Model.PageNum == Model.NumPages)
+        {
+            @:Next
+        }
+        else
+        {
+            @Html.ActionLink("Next", "GoToPage", new { pageNum = (Model.PageNum + 1) })
+        }
+    </span>
+</div>
+
+

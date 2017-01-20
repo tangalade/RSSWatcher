@@ -14,7 +14,7 @@ namespace RSSFilter.Models
         public int Id { get; set; }
         [Display(Name = "Parsed Correctly?")]
         public bool CorrectlyParsed { get; set; } = false;
-        public ItemViewStatus viewStatus { get; set; } = ItemViewStatus.NEW;
+        public ItemViewStatus ViewStatus { get; set; } = ItemViewStatus.NEW;
 
         // Raw RSS fields
         [Required]

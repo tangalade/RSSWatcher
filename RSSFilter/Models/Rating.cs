@@ -7,6 +7,6 @@ namespace RSSFilter.Models
 {
     public enum Rating
     {
-        UNRATED, LIKE, DISLIKE
+        LIKE, UNRATED, DISLIKE
     }
 }

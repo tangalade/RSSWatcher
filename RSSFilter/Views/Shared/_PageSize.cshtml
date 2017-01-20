@@ -1,0 +1,26 @@
+﻿@model RSSFilter.Common.Paging
+
+<div class="page-size-items">
+    <span class="count">
+        @((Model.PageNum - 1) * Model.PageSize + 1) -
+        @(Model.PageNum * Model.PageSize)
+        of
+        @(Model.NumRows)
+    </span>
+    <span>
+        Items per page:
+    </span>
+    @foreach (var pageSize in Model.SuggestedPageSizes)
+    {
+        <span class="page-size-item">
+            @if (Model.PageSize != pageSize)
+                {
+                @Html.ActionLink(pageSize.ToString(), "PageSize", new { pageSize = pageSize })
+            }
+            else
+            {
+                @Html.DisplayFor(r => pageSize)
+            }
+        </span>
+    }
+</div>
