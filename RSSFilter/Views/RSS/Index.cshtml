@@ -1,6 +1,6 @@
 ﻿@model RSSFilter.Common.ListViewModel<RSSFilter.Models.RSSItem>
 @{
-    ViewBag.Title = "Browse";
+    ViewBag.Title = "RSS Items";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @using RSSFilter.Models
@@ -81,7 +81,7 @@
         <tbody>
             @if (Model.items.Count() == 0)
             {
-                <tr><td colspan="5">k2nblog.com has not yet given us any items.</td></tr>
+                <tr><td colspan="10">k2nblog.com has not yet given us any items.</td></tr>
             }
             @foreach (var item in Model.items)
             {

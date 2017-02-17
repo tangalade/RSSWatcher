@@ -88,6 +88,23 @@ namespace RSSFilter.Common
                     pager.PageNum = Int32.Parse(cookies[pagerCookieToken].Values["PageNum"]);
             }
         }
+        public void clearCookies(HttpCookieCollection cookies)
+        {
+            if (cookies[filterCookieToken] != null)
+                cookies.Remove(filterCookieToken);
+            if (cookies[sorterCookieToken] != null)
+                cookies.Remove(sorterCookieToken);
+            if (cookies[pagerCookieToken] != null)
+                cookies.Remove(pagerCookieToken);
+        }
+
+        public Dictionary<string, ListFilter> filterableFields { get; set; } = new Dictionary<string, ListFilter>();
+        public Dictionary<string, SortingToken> sortableFields { get; set; } = new Dictionary<string, SortingToken>();
+        // set by View
+        public List<ListFilter> filters { get; set; } = new List<ListFilter>();
+        public SortingToken sorter { get; set; }
+        public Paging pager { get; set; } = new Paging();
+
         // uses Filterable and Sortable attributes of T to fill valid fields
         private void parseControllableFields()
         {
@@ -142,10 +159,9 @@ namespace RSSFilter.Common
                 }
             }
         }
-
         // returns the predicate for a sorter based upon <prop>
         // if no <field> specified, pick one at random
-        public Expression<Func<T,TKey>> getSortPredicate<TKey>(string prop = null)
+        public Expression<Func<T, TKey>> getSortPredicate<TKey>(string prop = null)
         {
             // if no field specified, pick the first sortable field
             if (prop == null && sortableFields.Count > 0)
@@ -180,7 +196,7 @@ namespace RSSFilter.Common
         }
 
         // returns the predicate for a field based upon <prop> and <value>
-        public Expression<Func<T,bool>> getFilterPredicate(string prop, string value)
+        public Expression<Func<T, bool>> getFilterPredicate(string prop, string value)
         {
             // FIXME: not done correctly, not sure how to dynamically build
             // if the prop is not a filterable prop, return null
@@ -207,11 +223,5 @@ namespace RSSFilter.Common
             Expression<Func<T, bool>> lambda = Expression.Lambda<Func<T, bool>>(boolExpression, param);
             return lambda;
         }
-        public Dictionary<string, ListFilter> filterableFields { get; set; } = new Dictionary<string, ListFilter>();
-        public Dictionary<string, SortingToken> sortableFields { get; set; } = new Dictionary<string, SortingToken>();
-        // set by View
-        public List<ListFilter> filters { get; set; } = new List<ListFilter>();
-        public SortingToken sorter { get; set; }
-        public Paging pager { get; set; } = new Paging();
     }
 }

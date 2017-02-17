@@ -1,10 +1,153 @@
-﻿@model RSSFilter.ViewModel.RSSServiceFormViewModel
+﻿@model RSSFilter.Common.ListViewModel<RSSFilter.Models.RSSServiceInfo>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "RSS Services";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@using RSSFilter.Models
+@using RSSFilter.Common
 
-<h2>RSS Background Services</h2>
+
+<div class="content-wrapper" data-type="rss-services">
+    <div class="main-title">
+        <h2>RSS Background Services</h2>
+    </div>
+    <div class="list-control-header">
+        @Html.Partial("_PageSize", Model.control.pager)
+    </div>
+    @{ string colName; }
+    <table class="table table-bordered table-hover rss-item-table">
+        <thead>
+            <tr class="header-row">
+                @{ colName = "Name"; }
+                <th data-col="@colName">
+                    <a href="@Url.Action("SortBy", "Service",
+                        new { prop = colName, ascending = (Model.control.sorter.Name.Equals(colName) ?
+                        (Model.control.sorter.Ascending ? false : true) : true) })">
+                        <span class="text">@Html.DisplayNameFor(m => m.items.ElementAt(0).Name)</span>
+                        <span class="sort-icon">
+                            @Html.Raw(Model.control.sorter.Name.Equals(colName) ? (Model.control.sorter.Ascending ? "&#x25b4" : "&#x25be") : "")
+                        </span>
+                    </a>
+                </th>
+                @{ colName = "RSSURL"; }
+                <th data-col="@colName">
+                    <a href="@Url.Action("SortBy", "Service",
+                        new { prop = colName, ascending = (Model.control.sorter.Name.Equals(colName) ?
+                        (Model.control.sorter.Ascending ? false : true) : true) })">
+                        <span class="text">@Html.DisplayNameFor(m => m.items.ElementAt(0).RSSURL)</span>
+                        <span class="sort-icon">
+                            @Html.Raw(Model.control.sorter.Name.Equals(colName) ? (Model.control.sorter.Ascending ? "&#x25b4" : "&#x25be") : "")
+                        </span>
+                    </a>
+                </th>
+                @{ colName = "LastStartDate"; }
+                <th data-col="@colName">
+                    <a href="@Url.Action("SortBy", "Service",
+                        new { prop = colName, ascending = (Model.control.sorter.Name.Equals(colName) ?
+                        (Model.control.sorter.Ascending ? false : true) : true) })">
+                        <span class="text">@Html.DisplayNameFor(m => m.items.ElementAt(0).LastStartDate)</span>
+                        <span class="sort-icon">
+                            @Html.Raw(Model.control.sorter.Name.Equals(colName) ? (Model.control.sorter.Ascending ? "&#x25b4" : "&#x25be") : "")
+                        </span>
+                    </a>
+                </th>
+                @{ colName = "IsRunning"; }
+                <th data-col="@colName">
+                    <a href="@Url.Action("SortBy", "Service",
+                        new { prop = colName, ascending = (Model.control.sorter.Name.Equals(colName) ?
+                        (Model.control.sorter.Ascending ? false : true) : true) })">
+                        <span class="text">@Html.DisplayNameFor(m => m.items.ElementAt(0).IsRunning)</span>
+                        <span class="sort-icon">
+                            @Html.Raw(Model.control.sorter.Name.Equals(colName) ? (Model.control.sorter.Ascending ? "&#x25b4" : "&#x25be") : "")
+                        </span>
+                    </a>
+                </th>
+                @{ colName = "Delete"; }
+                <th data-col="@colName"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.items)
+            {
+                <tr class="rss-item-row">
+                    @{ colName = "Name"; }
+                    <td data-col="@colName">
+                        <span class="content">
+                            @Html.DisplayFor(m => item.Name)
+                        </span>
+                    </td>
+                    @{ colName = "RSSURL"; }
+                    <td data-col="@colName">
+                        <span class="content">
+                            @Html.DisplayFor(m => item.RSSURL)
+                        </span>
+                    </td>
+                    @{ colName = "LastStartDate"; }
+                    <td data-col="@colName">
+                        <span class="content">
+                            @if (item.IsRunning == true)
+                            {
+                                @Html.DisplayFor(x => item.LastStartDate)
+                            }
+                        </span>
+                    </td>
+                    @{ colName = "IsRunning"; }
+                    <td data-col="@colName">
+                        <span class="content">
+                            @if (item.IsRunning == true)
+                            {
+                                <a class="text-success" href="@Url.Action("Stop", "Service", new { id = item.Id })">Active</a>
+                            }
+                            else
+                            {
+                                <a class="text-danger" href="@Url.Action("Start", "Service", new { id = item.Id })">Inactive</a>
+                            }
+                        </span>
+                    </td>
+                    @{ colName = "Delete"; }
+                    <td data-col="@colName">
+                        <span class="content">
+                            <a class="text" href="@Url.Action("Delete", "Service", new { id = item.Id })"><i class="material-icons">delete</i></a>
+                        </span>
+                    </td>
+                </tr>
+             }
+            <tr class="rss-item-row">
+                @{ colName = "Name"; }
+                <td data-col="@colName">
+                        @Html.TextBox("RSSServiceInfo.Name", "", new { @class = "form-control", placeholder = "Name", form = "new_service" })
+                </td>
+                @{ colName = "RSSURL"; }
+                <td data-col="@colName">
+                    <span class="content">
+                        @Html.TextBox("RSSServiceInfo.RSSURL", "", new { @class = "form-control", placeholder = "URL", form = "new_service" })
+                    </span>
+                </td>
+                @{ colName = "LastStartDate"; }
+                <td data-col="@colName">
+                    <span class="content">
+                    </span>
+                </td>
+                @{ colName = "IsRunning"; }
+                <td data-col="@colName">
+                    <span class="content">
+                        <button type="submit" class="btn btn-primary" form="new_service">New</button>
+                    </span>
+                </td>
+                @{ colName = "Delete"; }
+                <td data-col="@colName">
+                    <span class="content">
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    @Html.Partial("_PageControls", Model.control.pager)
+</div>
+@using (Html.BeginForm("Create", "Service", FormMethod.Post, new { enctype = "multipart/form-data", id = "new_service" })) { }
+
+@*<h2>RSS Background Services</h2>
 
 @{ int idx; }
 
@@ -137,4 +280,4 @@
 {
     using (Html.BeginForm("Submit", "Service", FormMethod.Post, new { enctype = "multipart/form-data", id = "update_service" + idx })) { }
     idx++;
-}
+}*@

@@ -14,8 +14,8 @@
                     <a href="@Url.Action("Index", "RSS")">Browse <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li>@Html.ActionLink("All RSS Items", "Index", "RSS", new { all = true }, new { })</li>
-                        <li>@Html.ActionLink("Artists", "Artists", "RSS")</li>
-                        <li>@Html.ActionLink("Types", "ItemTypes", "RSS")</li>
+                        <li>@Html.ActionLink("Artists", "Index", "Artist")</li>
+                        <li>@Html.ActionLink("Types", "Index", "ItemType")</li>
                     </ul>
                 </li>
                 <li>@Html.ActionLink("Service", "Index", "Service")</li>

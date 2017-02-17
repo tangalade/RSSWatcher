@@ -18,7 +18,7 @@
 }
 .rss-item-row[data-viewstatus="Viewed"] {
     font-weight: normal;
-    background-color: #dddddd;
+    background-color: #f0f0f0;
 }
 
 .rss-item-row [data-col="RSSPublishDate"] {
@@ -35,24 +35,24 @@
     position: relative;
 }
 
- .rss-item-table [data-col="Select"] {
+[data-type="rss-items"] .rss-item-table [data-col="Select"] {
     width: 29px;
     text-align: center;
 }
-.rss-item-table [data-col="RSSPublishDate"] {
+[data-type="rss-items"] .rss-item-table [data-col="RSSPublishDate"] {
     width: 115px;
 }
-.rss-item-table [data-col="ItemType"] {
+[data-type="rss-items"] .rss-item-table [data-col="ItemType"] {
     width: 13%;
 }
-.rss-item-table [data-col="Artist"] {
+[data-type="rss-items"] .rss-item-table [data-col="Artist"] {
     width: 27%;
 }
-.rss-item-table [data-col="Title"] {
+[data-type="rss-items"] .rss-item-table [data-col="Title"] {
     width: 60%;
 }
-.rss-item-table [data-col="Edit"],
-.rss-item-table [data-col="Archive"] {
+[data-type="rss-items"] .rss-item-table [data-col="Edit"],
+[data-type="rss-items"] .rss-item-table [data-col="Archive"] {
     width: 37px;
 }
 
@@ -63,8 +63,31 @@
 }
 [data-type="artists"] .rss-item-table [data-col="Rating"],
 [data-type="item-types"] .rss-item-table [data-col="Rating"] {
-    width: 58px;
+    width: 73px;
     text-align: center;
+}
+
+[data-type="rss-services"] .rss-item-table [data-col="Name"] {
+    width: 20%;
+}
+[data-type="rss-services"] .rss-item-table [data-col="RSSURL"] {
+    width: 50%;
+}
+[data-type="rss-services"] .rss-item-table [data-col="LastStartDate"] {
+    width: 95px;
+}
+[data-type="rss-services"] .rss-item-table [data-col="IsRunning"] {
+    width: 63px;
+}
+[data-type="rss-services"] .rss-item-table [data-col="Delete"] {
+    width: 37px;
+}
+
+[data-type="rss-services"] .rss-item-table td[data-col="IsRunning"] {
+    text-align: center;
+}
+[data-type="rss-services"] .rss-item-table [data-col="IsRunning"] .btn {
+    width: 100%;
 }
 
 .rss-item-table i {

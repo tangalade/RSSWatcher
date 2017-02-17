@@ -1350,28 +1350,24 @@ a.text-primary:focus {
 .text-success {
   color: #ffffff;
 }
-a.text-success:hover,
 a.text-success:focus {
   color: #e6e6e6;
 }
 .text-info {
   color: #ffffff;
 }
-a.text-info:hover,
 a.text-info:focus {
   color: #e6e6e6;
 }
 .text-warning {
   color: #ffffff;
 }
-a.text-warning:hover,
 a.text-warning:focus {
   color: #e6e6e6;
 }
 .text-danger {
   color: #ffffff;
 }
-a.text-danger:hover,
 a.text-danger:focus {
   color: #e6e6e6;
 }

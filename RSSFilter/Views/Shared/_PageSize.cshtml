@@ -3,7 +3,7 @@
 <div class="page-size-items">
     <span class="count">
         @((Model.PageNum - 1) * Model.PageSize + 1) -
-        @(Model.PageNum * Model.PageSize)
+        @(Math.Min(Model.PageNum * Model.PageSize, Model.NumRows))
         of
         @(Model.NumRows)
     </span>

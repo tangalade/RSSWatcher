@@ -20,7 +20,7 @@
             <tr class="header-row">
                 @{ colName = "Name"; }
                 <th data-col="@colName">
-                    <a href="@Url.Action("SortBy", "RSS",
+                    <a href="@Url.Action("SortBy", "ItemType",
                         new { prop = colName, ascending = (Model.control.sorter.Name.Equals(colName) ?
                         (Model.control.sorter.Ascending ? false : true) : true) })">
                         <span class="text">@Html.DisplayNameFor(m => m.items.ElementAt(0).Name)</span>
@@ -31,7 +31,7 @@
                 </th>
                 @{ colName = "Rating"; }
                 <th data-col="@colName">
-                    <a href="@Url.Action("SortBy", "RSS",
+                    <a href="@Url.Action("SortBy", "ItemType",
                         new { prop = colName, ascending = (Model.control.sorter.Name.Equals(colName) ?
                         (Model.control.sorter.Ascending ? false : true) : true) })">
                         <span class="text">@Html.DisplayNameFor(m => m.items.ElementAt(0).Rating)</span>
@@ -59,10 +59,10 @@
                     @{ colName = "Rating"; }
                     <td class="url-hover" data-col="@colName">
                         <span class="content">
-                            <a href="@Url.Action("RateItemType", "RSS", new { id = item.Id, rating = ((item.Rating == Rating.LIKE) ? Rating.UNRATED : Rating.LIKE)})">
+                            <a href="@Url.Action("Rate", "ItemType", new { id = item.Id, rating = ((item.Rating == Rating.LIKE) ? Rating.UNRATED : Rating.LIKE)})">
                                 <i data-active="@(item.Rating == Rating.LIKE)" data-type="up" class="material-icons thumb">thumb_up</i>
                             </a>
-                            <a href="@Url.Action("RateItemType", "RSS", new { id = item.Id, rating = ((item.Rating == Rating.DISLIKE) ? Rating.UNRATED: Rating.DISLIKE)})">
+                            <a href="@Url.Action("Rate", "ItemType", new { id = item.Id, rating = ((item.Rating == Rating.DISLIKE) ? Rating.UNRATED: Rating.DISLIKE)})">
                                 <i data-active="@(item.Rating == Rating.DISLIKE)" data-type="down" class="material-icons thumb">thumb_down</i>
                             </a>
                         </span>

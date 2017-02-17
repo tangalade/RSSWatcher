@@ -57,7 +57,7 @@ namespace RSSFilter.ViewModel
             }
 
             var count = await rssItems.CountAsync();
-            control.pager.NumPages = count/control.pager.PageSize + 1;
+            control.pager.NumPages = (int)Math.Ceiling((double)count/control.pager.PageSize);
             var rssItemsPage = await rssItems.Skip((control.pager.PageNum - 1) * control.pager.PageSize).Take(control.pager.PageSize).ToListAsync();
 
             return new RSSListViewModel() { rssItems = rssItemsPage, control = control };

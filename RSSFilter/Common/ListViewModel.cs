@@ -47,7 +47,8 @@ namespace RSSFilter.Common
 
             var count = await items.CountAsync();
             control.pager.NumRows = count;
-            control.pager.NumPages = count / control.pager.PageSize + 1;
+            control.pager.NumPages = (int)Math.Ceiling((double)count / control.pager.PageSize);
+
             // in case the current page is no longer valid
             control.pager.PageNum = Math.Min(control.pager.NumPages, control.pager.PageNum);
             var itemsPage = await items.Skip((control.pager.PageNum - 1) * control.pager.PageSize).Take(control.pager.PageSize).ToListAsync();

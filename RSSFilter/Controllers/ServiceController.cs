@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
 namespace RSSFilter.Controllers
 {
-    public class ServiceController : Controller
+    public class ServiceController : ListController<RSSServiceInfo>
     {
         private static string k2nblogURL { get; } = "http://feeds.feedburner.com/k2nfeed";
         private static string k2nblogName { get; } = "K2NBlog";
@@ -25,72 +26,77 @@ namespace RSSFilter.Controllers
         {
             _context.Dispose();
         }
-        public ActionResult Index(string sortOrder)
+        public ActionResult Delete(int id)
         {
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["URLSortParm"] = sortOrder == "URL" ? "url_desc" : "URL";
-            ViewData["LastStartDateSortParm"] = sortOrder == "LastStartDate" ? "laststartdate_desc" : "LastStartDate";
-            ViewData["StatusSortParm"] = sortOrder == "Status" ? "status_desc" : "Status";
-            IQueryable<RSSServiceInfo> rssServiceInfoes = _context.RSSServiceInfoes;
-
-            switch (sortOrder)
+            var rssServiceInfos = _context.RSSServiceInfoes;
+            var rssServiceInfo = rssServiceInfos.Where(r => r.Id == id).SingleOrDefault();
+            RSSService rssService = new RSSService() { rssURL = rssServiceInfo.RSSURL };
+            if (rssServiceInfo != null)
             {
-                case "name_desc":
-                    rssServiceInfoes = rssServiceInfoes.OrderByDescending(s => s.Name);
-                    break;
-                case "URL":
-                    rssServiceInfoes = rssServiceInfoes.OrderBy(s => s.RSSURL);
-                    break;
-                case "url_desc":
-                    rssServiceInfoes = rssServiceInfoes.OrderByDescending(s => s.RSSURL);
-                    break;
-                case "LastStartDate":
-                    rssServiceInfoes = rssServiceInfoes.OrderBy(s => s.LastStartDate);
-                    break;
-                case "laststartdate_desc":
-                    rssServiceInfoes = rssServiceInfoes.OrderByDescending(s => s.LastStartDate);
-                    break;
-                case "Status":
-                    rssServiceInfoes = rssServiceInfoes.OrderByDescending(s => s.IsRunning);
-                    break;
-                case "status_desc":
-                    rssServiceInfoes = rssServiceInfoes.OrderBy(s => s.IsRunning);
-                    break;
-                default:
-                    rssServiceInfoes = rssServiceInfoes.OrderBy(s => s.Name);
-                    break;
-            }
-            var formViewModel = new RSSServiceFormViewModel()
-            {
-                RSSServiceInfoes = rssServiceInfoes
-            };
-            return View(formViewModel);
-        }
-
-        public ActionResult Submit(RSSServiceInfo rssServiceInfo, string command)
-        {
-            if (!ModelState.IsValid)
-            {
-                var rssServiceInfoes = _context.RSSServiceInfoes;
-                var formViewModel = new RSSServiceFormViewModel()
+                if (rssServiceInfo.IsRunning)
                 {
-                    RSSServiceInfoes = rssServiceInfoes,
-                    RSSServiceInfo = rssServiceInfo
-                };
-                return View("Index", formViewModel);
+                    rssService.stop();
+                }
+                _context.RSSServiceInfoes.Remove(rssServiceInfo);
+                _context.SaveChanges();
             }
-            switch (command) {
-                case "Create":
-                    return RedirectToAction("Create", "Service", rssServiceInfo);
-                case "Delete":
-                    return RedirectToAction("Delete", "Service", rssServiceInfo);
-                case "Start":
-                    return RedirectToAction("Start", "Service", rssServiceInfo);
-                case "Stop":
-                    return RedirectToAction("Stop", "Service", rssServiceInfo);
-                default:
-                    return RedirectToAction("Index", "Service");
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+        public ActionResult Start(int id)
+        {
+            var rssServiceInfos = _context.RSSServiceInfoes;
+            var rssServiceInfo = rssServiceInfos.Where(r => r.Id == id).SingleOrDefault();
+            // store HF job id in db with rssURL (probably just use the rssURL)
+            // add note to View to stop and start the service if it says Active, because the state is not known for certain
+            RSSService rssService = new RSSService() { rssURL = rssServiceInfo.RSSURL };
+            // use rssService.JobId to check DB
+            // if job id exists, check if it is running
+            if (rssServiceInfo != null)
+            {
+                // if it says it is running, stop and restart the service and update LastStartDate
+                if (rssServiceInfo.IsRunning)
+                {
+                    rssService.stop();
+                    rssService.start();
+                    rssServiceInfo.LastStartDate = DateTimeOffset.Now;
+                    rssServiceInfo.LastStopDate = DateTimeOffset.Now;
+                }
+                // else start the service and update the db with IsRunning and LastStartDate
+                else
+                {
+                    rssService.start();
+                    rssServiceInfo.IsRunning = true;
+                    rssServiceInfo.LastStartDate = DateTimeOffset.Now;
+                }
             }
+            _context.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+        public ActionResult Stop(int id)
+        {
+            var rssServiceInfos = _context.RSSServiceInfoes;
+            var rssServiceInfo = rssServiceInfos.Where(r => r.Id == id).SingleOrDefault();
+            // store HF job id in db with rssURL (probably just use the rssURL)
+            // add note to View to stop and start the service if it says Active, because the state is not known for certain
+            RSSService rssService = new RSSService() { rssURL = rssServiceInfo.RSSURL };
+            // use rssService.JobId to check DB
+            // if job id exists, check if it is running
+            if (rssServiceInfo != null)
+            {
+                // if it is running, stop the service and mark it as stopped in the db
+                if (rssServiceInfo.IsRunning)
+                {
+                    rssService.stop();
+                    rssServiceInfo.IsRunning = false;
+                    rssServiceInfo.LastStopDate = DateTimeOffset.Now;
+                }
+                // else do nothing
+                else
+                {
+                }
+            }
+            _context.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
         }
         public ActionResult Create(RSSServiceInfo rssServiceInfo)
         {
@@ -101,99 +107,27 @@ namespace RSSFilter.Controllers
             _context.RSSServiceInfoes.Add(rssServiceInfo);
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Service");
+            return Redirect(Request.UrlReferrer.ToString());
         }
-
-        public ActionResult Delete(RSSServiceInfo rssServiceInfo)
+        public void processActionCookies<T>(ListControl<T> control, string action)
         {
-            RSSService rssService = new RSSService() { rssURL = rssServiceInfo.RSSURL };
-            var rssServiceInfoDb = _context.RSSServiceInfoes.SingleOrDefault(r => r.RSSURL == rssServiceInfo.RSSURL);
-            if (rssServiceInfoDb != null)
-            {
-                if (rssServiceInfoDb.IsRunning)
-                {
-                    rssService.stop();
-                }
-                _context.RSSServiceInfoes.Remove(rssServiceInfoDb);
-                _context.SaveChanges();
-            }
-
-            return RedirectToAction("Index", "Service");
+            // if came from a different Action, clear the control cookies
+            if (Request.Cookies[actionCookieToken] != null)
+                if (Request.Cookies[actionCookieToken].Value != action)
+                    control.clearCookies(Request.Cookies);
+            Response.Cookies[actionCookieToken].Value = action;
         }
-        public ActionResult Start(RSSServiceInfo rssServiceInfo)
+        public async Task<ActionResult> Index(bool all = false)
         {
-            // store HF job id in db with rssURL (probably just use the rssURL)
-            // add note to View to stop and start the service if it says Active, because the state is not known for certain
-            RSSService rssService = new RSSService() { rssURL = rssServiceInfo.RSSURL };
-            var rssServiceInfoDb = _context.RSSServiceInfoes.SingleOrDefault(r => r.RSSURL == rssServiceInfo.RSSURL);
-            // use rssService.JobId to check DB
-            // if job id exists, check if it is running
-            if (rssServiceInfoDb != null)
-            {
-                // if it says it is running, stop and restart the service and update LastStartDate
-                if (rssServiceInfoDb.IsRunning)
-                {
-                    rssService.stop();
-                    rssService.start();
-                    rssServiceInfoDb.LastStartDate = DateTimeOffset.Now;
-                    rssServiceInfoDb.LastStopDate = DateTimeOffset.Now;
-                }
-                // else start the service and update the db with IsRunning and LastStartDate
-                else
-                {
-                    rssService.start();
-                    rssServiceInfoDb.IsRunning = true;
-                    rssServiceInfoDb.LastStartDate = DateTimeOffset.Now;
-                }
-            }
-            // else start the service, and add to db
-            else
-            {
-                rssService.start();
-                rssServiceInfoDb = new RSSServiceInfo()
-                {
-                    RSSURL = rssService.rssURL,
-                    Name = rssServiceInfo.Name,
-                    IsRunning = true,
-                    CreationDate = DateTimeOffset.Now,
-                    LastStartDate = DateTimeOffset.Now,
-                    LastStopDate = DateTimeOffset.Now
-                };
-                _context.RSSServiceInfoes.Add(rssServiceInfoDb);
-            }
-            _context.SaveChanges();
-            return RedirectToAction("Index", "Service");
-        }
+            ListControl<RSSServiceInfo> control = new ListControl<RSSServiceInfo>();
+            processActionCookies(control, "Index");
+            control.setFromCookies(Request.Cookies);
 
-        public ActionResult Stop(RSSServiceInfo rssServiceInfo)
-        {
-            // store HF job id in db with rssURL (probably just use the rssURL)
-            // add note to View to stop and start the service if it says Active, because the state is not known for certain
-            RSSService rssService = new RSSService() { rssURL = rssServiceInfo.RSSURL };
-            var rssServiceInfoDb = _context.RSSServiceInfoes.SingleOrDefault(r => r.RSSURL == rssServiceInfo.RSSURL);
-            // use rssService.JobId to check DB
-            // if job id exists, check if it is running
-            if (rssServiceInfoDb != null)
-            {
-                // if it is running, stop the service and mark it as stopped in the db
-                if (rssServiceInfoDb.IsRunning)
-                {
-                    rssService.stop();
-                    rssServiceInfoDb.IsRunning = false;
-                    rssServiceInfoDb.LastStopDate = DateTimeOffset.Now;
-                }
-                // else do nothing
-                else
-                {
-                }
-            }
-            // else do nothing
-            else
-            {
-            }
-            _context.SaveChanges();
-            return RedirectToAction("Index", "Service");
-        }
+            var rssServiceInfos = _context.RSSServiceInfoes;
 
+            var listViewModel = await ListViewModel<RSSServiceInfo>.CreateAsync(rssServiceInfos, control);
+            control.fillCookies(Response.Cookies);
+            return View(listViewModel);
+        }
     }
 }

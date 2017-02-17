@@ -183,7 +183,10 @@
     <Compile Include="Common\RSSService.cs" />
     <Compile Include="Common\SortingToken.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ArtistController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ItemTypeController.cs" />
+    <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RSSController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
@@ -270,6 +273,9 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\RSSFilter20170216020438 - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\RSSFilter20170216020438 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\RSSFilter20170216024914 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\cldr.js" />
     <Content Include="Scripts\cldr\event.js" />
@@ -296,7 +302,9 @@
     <Content Include="Scripts\list-control.js" />
     <Content Include="Scripts\rss-item-list.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -333,15 +341,12 @@
     <Content Include="Views\Shared\_NavBar.cshtml" />
     <Content Include="Views\Service\Index.cshtml" />
     <Content Include="Views\RSS\Index.cshtml" />
-    <Content Include="Views\RSS\Index.forms.cshtml" />
-    <Content Include="Views\RSS\Index.rsslistviewmodel.cshtml" />
     <Content Include="Views\RSS\Edit.cshtml" />
-    <Content Include="Views\RSS\Index.js.cshtml" />
-    <Content Include="Views\RSS\Artists.cshtml" />
-    <Content Include="Views\RSS\ItemTypes.cshtml" />
     <Content Include="Views\Shared\_PageSize.cshtml" />
     <Content Include="Views\Shared\_FilterRemoveItems.cshtml" />
     <Content Include="Views\Shared\_PageControls.cshtml" />
+    <Content Include="Views\Artist\Index.cshtml" />
+    <Content Include="Views\ItemType\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -391,6 +396,9 @@
     <EmbeddedResource Include="Migrations\201701182115140_AddArtistItemTypeRating.resx">
       <DependentUpon>201701182115140_AddArtistItemTypeRating.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
