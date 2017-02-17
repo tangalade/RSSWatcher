@@ -2,10 +2,21 @@
 
 <div class="page-size-items">
     <span class="count">
-        @((Model.PageNum - 1) * Model.PageSize + 1) -
-        @(Math.Min(Model.PageNum * Model.PageSize, Model.NumRows))
-        of
-        @(Model.NumRows)
+        @if (Model.NumRows == 0)
+        {
+            <text>
+                0 of 0
+            </text>
+        }
+        else
+        {
+            <text>
+                @((Model.PageNum - 1) * Model.PageSize + 1) -
+                @(Math.Min(Model.PageNum * Model.PageSize, Model.NumRows))
+                of
+                @(Model.NumRows)
+            </text>
+        }
     </span>
     <span>
         Items per page:

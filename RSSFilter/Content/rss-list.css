@@ -119,10 +119,14 @@
     padding-left: 1px;
     padding-right: 1px;
 }
-.rss-item-row .thumbs .thumb {
+.rss-item-row .thumbs a:hover {
+    text-decoration: none;
+}
+.rss-item-row .thumbs .thumb[data-active="False"] {
     opacity: 0;
 }
-.rss-item-row td:hover .thumb {
+.rss-item-row td:hover .thumb[data-active="False"],
+.rss-item-row td:hover .thumb[data-active="True"] {
     opacity: 1;
 }
 .thumb:hover {

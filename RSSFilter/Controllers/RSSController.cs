@@ -94,9 +94,13 @@ namespace RSSFilter.Controllers
 
             var rssItems = _context.RSSItems.Include(r => r.Artist).Include(r => r.ItemType);
 
-            // exclude Archived items
+            // exclude Archived items, and items with disliked Artists and Item Types
             if (!all)
+            {
                 rssItems = rssItems.Where(r => r.ViewStatus != ItemViewStatus.ARCHIVED);
+                rssItems = rssItems.Where(r => r.Artist.Rating != Rating.DISLIKE);
+                rssItems = rssItems.Where(r => r.ItemType.Rating != Rating.DISLIKE);
+            }
 
             var listViewModel = await ListViewModel<RSSItem>.CreateAsync(rssItems, control);
             control.fillCookies(Response.Cookies);

@@ -47,7 +47,9 @@ namespace RSSFilter.Common
 
             var count = await items.CountAsync();
             control.pager.NumRows = count;
-            control.pager.NumPages = (int)Math.Ceiling((double)count / control.pager.PageSize);
+            // Max for if count == 0
+            // Ceiling because a partial page counts as a full page
+            control.pager.NumPages = Math.Max((int)Math.Ceiling((double)count / control.pager.PageSize),1);
 
             // in case the current page is no longer valid
             control.pager.PageNum = Math.Min(control.pager.NumPages, control.pager.PageNum);
