@@ -133,7 +133,7 @@
                     @{ colName = "Title"; }
                     <td class="url-hover" data-col="@colName">
                         <span class="content">
-                            <a class="text" href="@Url.Action("ViewItem", "RSS", new { id = item.Id })">
+                            <a class="text" href="@Url.Action("ViewItem", "RSS", new { id = item.Id })" target="_blank">
                                 @Html.DisplayFor(m => item.Title)
                             </a>
                         </span>
